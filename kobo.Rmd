@@ -1,0 +1,45 @@
+---
+title: "Download Data dari Kobo"
+output: html_document
+---
+
+## 1. Set variabel global
+
+Set alamat KoboICRAF: <https://koboform.kiprahagroforestri.id>.
+
+Set alamat KoboCat: <https://kobocat.kiprahagroforestri.id>.
+
+```{r}
+library(httr)
+library(jsonlite)
+library(readr)
+library(ggplot2)
+
+kobo_server_url <- "https://koboform.kiprahagroforestri.id/"
+kc_server_url <- "https://kobocat.kiprahagroforestri.id/"
+```
+
+Set alamat form yang ingin diakses
+
+```{r}
+form_id <- 72
+url <- paste0(kc_server_url,"api/v1/data/",form_id,".csv")
+rawdata <- GET(url,authenticate("user_test","Test_1234!"),progress())
+```
+
+## Load data
+
+Lakukan langkah berikut untuk memuat data dari kobo:
+
+```{r}
+d_content <- read_csv(content(rawdata,"raw",encoding = "UTF-8"))
+```
+
+## Plot data
+
+Plot data sesuai kebutuhan menggunakan ggplot
+
+```{r}
+ggplot(d_content, aes(Jenis_penggunaan_lahan)) + geom_bar()
+```
+
